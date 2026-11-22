@@ -44,10 +44,6 @@ class NoteRepository(context: Context) {
         }
     }
 
-    suspend fun getNoteById(id: Long): Note? {
-        return _notesFlow.value.find { it.id == id }
-    }
-
     suspend fun insert(note: Note) {
         val current = _notesFlow.value.toMutableList()
         current.add(0, note)

@@ -25,6 +25,10 @@ workflows:
       vars:
         PACKAGE_NAME: "com.supersnippets.dailyme"
       java: 21
+    cache:
+      cache_paths:
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
     scripts:
       - name: Set Android SDK location
         script: |

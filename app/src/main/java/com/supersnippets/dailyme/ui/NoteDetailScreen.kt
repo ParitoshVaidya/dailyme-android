@@ -7,6 +7,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.supersnippets.dailyme.data.Note
 
@@ -55,17 +57,20 @@ fun NoteDetailScreen(
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
-                label = { Text("Title") },
-                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Note Title") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { contentDescription = "Local note title" },
                 singleLine = true
             )
             OutlinedTextField(
                 value = content,
                 onValueChange = { content = it },
-                label = { Text("Content") },
+                label = { Text("Note Content") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
+                    .semantics { contentDescription = "Local note content" }
             )
         }
     }
