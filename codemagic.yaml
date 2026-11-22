@@ -1,11 +1,27 @@
 workflows:
   native-android:
-    name: Native Android Workflow
+    name: Native Android CD Workflow
     max_build_duration: 120
     instance_type: mac_mini_m2
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+        - pattern: develop
+          include: true
+          source: true
+        - pattern: feature/*
+          include: true
+          source: true
+      cancel_previous_builds: true
     environment:
       android_signing:
-        - keystore_reference
+        - dailyme-keystore
+      groups:
+        - google_play
       vars:
         PACKAGE_NAME: "com.supersnippets.dailyme"
       java: 21
@@ -13,10 +29,13 @@ workflows:
       - name: Set Android SDK location
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
-      - name: Build Android release APK and AAB
+      - name: Build Android release AAB
         script: |
           chmod +x gradlew
-          ./gradlew bundleRelease assembleRelease -Pandroid.injected.version.code=$BUILD_NUMBER
+          ./gradlew bundleRelease
     artifacts:
       - app/build/outputs/bundle/release/*.aab
-      - app/build/outputs/apk/release/*.apk
+    publishing:
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
