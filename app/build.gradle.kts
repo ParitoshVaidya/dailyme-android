@@ -20,8 +20,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            if (System.getenv("CI")?.toBoolean() == true) {
+                storeFile = System.getenv("CM_KEYSTORE_PATH")?.let { file(it) }
+                storePassword = System.getenv("CM_KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("CM_KEY_ALIAS")
+                keyPassword = System.getenv("CM_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (System.getenv("CI")?.toBoolean() == true && !System.getenv("CM_KEYSTORE_PATH").isNullOrEmpty()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             optimization {
                 enable = true
             }
